@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_chat/auth/auth_service.dart';
 import 'package:firebase_chat/components/custom_button.dart';
 import 'package:firebase_chat/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,27 @@ class RegisterPage extends StatelessWidget {
 
   final void Function()? onTap;
 
-  void register() {}
+  void register(BuildContext context) {
+    AuthService _auth = AuthService();
+    if (_passwordController.text == _confirmPasswordController.text) {
+      try {
+        _auth.signupWithEmailPassword(
+            _emailController.text, _passwordController.text);
+      } catch (error) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(error.toString()),
+                ));
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => const AlertDialog(
+                title: Text("Please check and re-confirm your password"),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +78,7 @@ class RegisterPage extends StatelessWidget {
             ),
             CustomButton(
               text: "Login",
-              onTap: register,
+              onTap: () => register(context),
             ),
             const SizedBox(
               height: 25,

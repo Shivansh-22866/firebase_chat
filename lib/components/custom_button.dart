@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
         child: Center(
-          child: Text("Button"),
+          child: Text(text),
         ),
       ),
     );
