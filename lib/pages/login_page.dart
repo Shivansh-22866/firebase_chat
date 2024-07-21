@@ -1,3 +1,4 @@
+import 'package:firebase_chat/auth/auth_service.dart';
 import 'package:firebase_chat/components/custom_button.dart';
 import 'package:firebase_chat/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,21 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void login() {}
+  void login(BuildContext context) async {
+    final authService = AuthService();
+
+    try {
+      await authService.signInWithEmailPassword(
+          _emailController.text, _passwordController.text);
+    } catch (error) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(error.toString()),
+              ));
+    }
+  }
+
   final void Function()? onTap;
 
   LoginPage({super.key, required this.onTap});
@@ -49,7 +64,7 @@ class LoginPage extends StatelessWidget {
             ),
             CustomButton(
               text: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(
               height: 25,
