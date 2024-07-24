@@ -15,8 +15,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text("Home"),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.grey,
+        elevation: 0,
       ),
       drawer: const HomeDrawer(),
       body: _buildUserList(),
@@ -36,8 +41,9 @@ class HomePage extends StatelessWidget {
         }
 
         return ListView(
-          children:
-              snapshot.data!.map((userData) => _buildUserListItem(userData, context)).toList(),
+          children: snapshot.data!
+              .map((userData) => _buildUserListItem(userData, context))
+              .toList(),
         );
       },
     );
@@ -45,14 +51,21 @@ class HomePage extends StatelessWidget {
 
   Widget _buildUserListItem(
       Map<String, dynamic> userData, BuildContext context) {
-    return UserTile(
-      text: userData["email"],
-      onTap: () {
-        Navigator.push(
-            context, CupertinoPageRoute(builder: (context) => ChatPage(
-              receiverEmail: userData['email'],
-            )));
-      },
-    );
+    if (userData['email'] != _authService.getCurrentUser()!.email) {
+      return UserTile(
+        text: userData["email"],
+        onTap: () {
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => ChatPage(
+                        receiverEmail: userData['email'],
+                        receiverId: userData['uid'],
+                      )));
+        },
+      );
+    } else {
+      return Container();
+    }
   }
 }
