@@ -35,7 +35,10 @@ class ChatBubble extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.block),
                 title: const Text("Block"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  _blockUser(context, userId);
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.cancel),
@@ -71,6 +74,32 @@ class ChatBubble extends StatelessWidget {
                           const SnackBar(content: Text("Message Reported")));
                     },
                     child: const Text("Report"))
+              ],
+            ));
+  }
+
+  void _blockUser(BuildContext context, String userId) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Block User"),
+              content: const Text("Are you sure you want to block this user?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                    onPressed: () {
+                      ChatService().blockUser(userId);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("User Blocked")));
+                    },
+                    child: const Text("Block"))
               ],
             ));
   }
